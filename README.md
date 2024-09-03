@@ -142,7 +142,7 @@ SELECT
     `events`.`id` AS id_evento, 
     `events`.`name` AS nome_evento,
     `events`.`total_tickets`,
-    COUNT(`bookings`.`id`)
+    COUNT(`bookings`.`id`) AS prenotazioni
 FROM 
     `events`
 # left join per includere tutti gli eventi
@@ -151,5 +151,44 @@ LEFT JOIN
 GROUP BY 
     `events`.`id`
 HAVING 
-    `events`.`total_tickets` = COUNT(`bookings`.`id`) ;
+    `events`.`total_tickets` = prenotazioni;
+```
+
+
+#### Selezionare tutte le location in ordine per chi ha ospitato più eventi (82)
+
+```sql 
+SELECT `locations`.*, COUNT(`events`.`id`) AS numero_eventi
+FROM `locations`
+LEFT JOIN `events` ON `events`.`location_id` = `locations`.`id`
+GROUP BY `locations`.`id`
+ORDER BY numero_eventi DESC;
+```
+#### Selezionare tutti gli utenti che si sono prenotati a più di 70 eventi (74)
+```sql
+SELECT `users`.*, COUNT(`bookings`.`user_id`) AS prenotazioni
+FROM `users`
+LEFT JOIN `bookings` ON `bookings`.`user_id` = `users`.`id`
+GROUP BY `users`.`id`
+HAVING prenotazioni > 70
+```
+
+#### Selezionare tutti gli eventi, mostrando il nome dell’evento, il nome della location, il numero di prenotazioni e il totale di biglietti ancora disponibili per l’evento (1040)
+
+```sql
+SELECT 
+    `events`.`name` AS nome_evento,
+    `locations`.`name` AS location,
+    COUNT(`bookings`.`id`) AS numero_prenotazioni,
+    `events`.`total_tickets` - COUNT(`bookings`.`id`) AS biglietti_disponibili
+FROM 
+    `events`
+JOIN 
+    `locations` ON `events`.`location_id` = `locations`.`id`
+LEFT JOIN 
+    `bookings` ON `bookings`.`event_id` = `events`.`id`
+GROUP BY 
+    `events`.`id`, `events`.`name`, `locations`.`id`, `locations`.`name`, `events`.`total_tickets`
+ORDER BY 
+    `events`.`name`;
 ```
