@@ -1,3 +1,8 @@
+### Modello ER 
+![alt text](gestore_eventi.png)
+
+### Queries
+
 #### Selezionare tutti gli eventi gratis, cioè con prezzo nullo (19)
 
 ```sql
