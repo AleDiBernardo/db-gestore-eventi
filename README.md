@@ -145,7 +145,7 @@ SELECT
     COUNT(`bookings`.`id`)
 FROM 
     `events`
-// left join per includere tutti gli eventi
+# left join per includere tutti gli eventi
 LEFT JOIN 
     `bookings` ON  `events`.`id` = `bookings`.`event_id`
 GROUP BY 
